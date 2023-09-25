@@ -23,13 +23,10 @@ impl Stockfish {
             .stdin(Stdio::piped())
             .stdout(Stdio::piped())
             .spawn()
-            .map_err(|_| StockfishError::LoadEngineError)?;
+            .map_err(|_| StockfishError::LoadEngine)?;
 
-        let mut stdin = stockfish.stdin.take().ok_or(StockfishError::StdInError)?;
-        let mut stdout = stockfish
-            .stdout
-            .take()
-            .ok_or(StockfishError::StdOutError)?;
+        let mut stdin = stockfish.stdin.take().ok_or(StockfishError::StdIn)?;
+        let mut stdout = stockfish.stdout.take().ok_or(StockfishError::StdOut)?;
 
         let input = format!(
             "uci\nisready\nucinewgame\nposition {}\ngo depth {}\nquit\n",
@@ -38,16 +35,16 @@ impl Stockfish {
         );
         stdin
             .write_all(input.as_bytes())
-            .map_err(|_| StockfishError::WriteError)?;
+            .map_err(|_| StockfishError::Write)?;
 
         let mut output = String::new();
         stdout
             .read_to_string(&mut output)
-            .map_err(|_| StockfishError::ReadError)?;
+            .map_err(|_| StockfishError::Read)?;
 
         let result = self
             .get_substring(&output, "bestmove ")
-            .ok_or( StockfishError::GetSubStringError)?
+            .ok_or(StockfishError::GetSubString)?
             .trim();
 
         Ok(String::from(result))

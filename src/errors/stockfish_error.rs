@@ -1,11 +1,11 @@
 #[derive(Clone, Debug)]
 pub enum StockfishError {
-    LoadEngineError,
-    WriteError,
-    ReadError,
-    StdInError,
-    StdOutError,
-    GetSubStringError
+    LoadEngine,
+    Write,
+    Read,
+    StdIn,
+    StdOut,
+    GetSubString,
 }
 
 impl core::fmt::Display for StockfishError {

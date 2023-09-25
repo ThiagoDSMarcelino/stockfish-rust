@@ -2,6 +2,8 @@ use std::io::{Read, Write};
 use std::path::PathBuf;
 use std::process::{Command, Stdio};
 
+use crate::errors::StockfishError;
+
 #[derive(Debug)]
 pub struct Stockfish {
     dir: PathBuf,
@@ -16,18 +18,18 @@ impl Stockfish {
         }
     }
 
-    pub fn go_depth(&self, depth: u8) -> Result<String, String> {
+    pub fn go_depth(&self, depth: u8) -> Result<String, StockfishError> {
         let mut stockfish = Command::new(&self.dir)
             .stdin(Stdio::piped())
             .stdout(Stdio::piped())
             .spawn()
-            .map_err(|err| format!("Failed to access Stockfish program: {}", err))?;
+            .map_err(|_| StockfishError::LoadEngineError)?;
 
-        let mut stdin = stockfish.stdin.take().ok_or("Error in input".to_string())?;
+        let mut stdin = stockfish.stdin.take().ok_or(StockfishError::StdInError)?;
         let mut stdout = stockfish
             .stdout
             .take()
-            .ok_or("Error in output".to_string())?;
+            .ok_or(StockfishError::StdOutError)?;
 
         let input = format!(
             "uci\nisready\nucinewgame\nposition {}\ngo depth {}\nquit\n",
@@ -36,16 +38,16 @@ impl Stockfish {
         );
         stdin
             .write_all(input.as_bytes())
-            .map_err(|err| format!("Failed to input Stockfish program: {}", err))?;
+            .map_err(|_| StockfishError::WriteError)?;
 
         let mut output = String::new();
         stdout
             .read_to_string(&mut output)
-            .map_err(|err| format!("Failed to read Stockfish output: {}", err))?;
+            .map_err(|_| StockfishError::ReadError)?;
 
         let result = self
             .get_substring(&output, "bestmove ")
-            .ok_or("Internal error")?
+            .ok_or( StockfishError::GetSubStringError)?
             .trim();
 
         Ok(String::from(result))

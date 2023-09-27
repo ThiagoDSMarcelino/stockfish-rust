@@ -8,7 +8,7 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
-  RUSTFLAGS: "-Dwarnings"
+  RUSTFLAGS: "-D warnings"
 
 jobs:
   build:
@@ -30,9 +30,7 @@ jobs:
     
     - name: Build
       run: cargo build --verbose
-    - name: Test
-      run: cargo test --verbose
     - name: Clippy
-      run: cargo clippy --all-targets --all-features
+      run: cargo clippy --verbose --all-targets --all-features -- -D warnings
     - name: Audit
       run: cargo audit

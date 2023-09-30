@@ -5,3 +5,18 @@ The objective of this project is to integrate the [Stockfish](https://stockfishc
 ![GitHub](https://img.shields.io/github/license/ThiagoDSMarcelino/stockfish-rust?color=blue)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/ThiagoDSMarcelino/stockfish-rust)
 
+## Methods
+
+### Go Depth
+
+```Rust
+
+fn go_depth() -> Result<(), StockfishError> {
+    let stockfish = Stockfish::new("stockfish"); // Directory to Stockfish Engine in your computer
+    let result = stockfish.go_depth(1)?;
+
+    assert_eq!(result, "a2a3");
+
+    Ok(())
+}
+```

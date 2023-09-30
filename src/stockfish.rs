@@ -12,7 +12,7 @@ pub struct Stockfish {
 }
 
 impl Stockfish {
-    pub fn new(dir: &'static str) -> Self {
+    pub fn new(dir: &str) -> Self {
         Self {
             dir: PathBuf::from(dir),
             position: String::from("startpos"),

@@ -1,4 +1,11 @@
 {
+    "editor.formatOnSave": true,
+    "[rust]": {
+        "editor.formatOnSave": true
+    },
+    "rust-analyzer.linkedProjects": [
+        "./Cargo.toml"
+    ],
     "cSpell.words": [
         "bestmove",
         "nisready",

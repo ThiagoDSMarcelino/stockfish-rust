@@ -3,6 +3,7 @@ use std::path::PathBuf;
 use std::process::{Command, Stdio};
 
 use crate::errors::StockfishError;
+use crate::string_useful::Useful;
 
 #[derive(Debug)]
 pub struct Stockfish {
@@ -33,6 +34,7 @@ impl Stockfish {
             self.position,
             &depth.to_string()
         );
+
         stdin
             .write_all(input.as_bytes())
             .map_err(|_| StockfishError::Write)?;
@@ -42,8 +44,8 @@ impl Stockfish {
             .read_to_string(&mut output)
             .map_err(|_| StockfishError::Read)?;
 
-        let result = self
-            .get_substring(&output, "bestmove ")
+        let result = output
+            .get_substring("bestmove ")
             .ok_or(StockfishError::GetSubString)?
             .trim();
 
@@ -56,13 +58,5 @@ impl Stockfish {
 
     pub fn reset_position(&mut self) {
         self.position = String::from("startpos");
-    }
-
-    fn get_substring<'a>(&self, data: &'a str, separator: &'a str) -> Option<&'a str> {
-        if let Some(index) = data.find(separator) {
-            Some(&data[index + separator.len()..])
-        } else {
-            None
-        }
     }
 }

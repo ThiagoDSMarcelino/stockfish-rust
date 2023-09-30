@@ -11,7 +11,7 @@ The objective of this project is to integrate the [Stockfish](https://stockfishc
 
 ```Rust
 
-fn go_depth() -> Result<(), StockfishError> {
+fn main() -> Result<(), StockfishError> {
     let stockfish = Stockfish::new("stockfish"); // Directory to Stockfish Engine in your computer
     let result = stockfish.go_depth(1)?;
 

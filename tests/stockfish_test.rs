@@ -4,7 +4,7 @@ mod tests {
 
     #[test]
     fn go_depth() -> Result<(), StockfishError> {
-        let stockfish = Stockfish::new("src/stockfish");
+        let stockfish = Stockfish::new("stockfish");
         let result = stockfish.go_depth(1)?;
 
         assert_eq!(result, "a2a3");

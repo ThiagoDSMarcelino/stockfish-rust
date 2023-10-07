@@ -24,7 +24,9 @@ impl Stockfish {
             .stdin(Stdio::piped())
             .stdout(Stdio::piped())
             .spawn()
-            .map_err(|_| StockfishError::LoadEngine)?;
+            .map_err(|_| StockfishError::LoadEngine {
+                path: self.dir.clone(),
+            })?;
 
         let mut stdin = stockfish.stdin.take().ok_or(StockfishError::StdIn)?;
         let mut stdout = stockfish.stdout.take().ok_or(StockfishError::StdOut)?;
